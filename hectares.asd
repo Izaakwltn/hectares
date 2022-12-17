@@ -10,6 +10,7 @@
   :depends-on ("dexador" "cl-json")
   :serial t
   :components ((:file "package")
-               (:file "request-parsing")
+               (:file "requests")
                (:file "works")
-               (:file "people")))
+               (:file "people")
+               (:file "search")))

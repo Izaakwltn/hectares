@@ -13,9 +13,7 @@
   
 (deftype imslp-retformat ()
   `(satisfies imslp-retformat-p))
-
-;;; type is 1 for people or 2 for works
-
+;type is 1 for people or 2 for works
 (declaim (ftype (function (integer integer imslp-retformat) string) imslp-request-url))
 (defun imslp-request-url (type start retformat)
   (concatenate 'string "https://imslp.org/imslpscripts/API.ISCR.php?account=worklist/disclaimer=accepted/sort=id/type="
@@ -27,13 +25,11 @@
 
 ;;; generating urls for accessing people and works from a given start-id
 
-;;; both of these will return 1000 items from the starting point
+;;; both of these will return 1000 items
 
-(declaim (ftype (function (integer) string) people-url))
 (defun people-url (start)
   (imslp-request-url 1 start "json"))
 
-(declaim (ftype (function (integer) string) people-url))
 (defun works-url (start)
   (imslp-request-url 2 start "json"))
 

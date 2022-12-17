@@ -15,7 +15,7 @@ I've been adding in multi-threaded approaches to try to manage the huge quantiti
 
 ##### A joke:
 
-*How much land is used to grow all the trees needed to make all the paper necessary for printing all the copies of all the editions of the works of Berlioz?*
+*How much land is used to grow all the trees needed to make all the paper necessary to print all the copies of all the editions of the works of Berlioz?*
 
 Answer: 
 

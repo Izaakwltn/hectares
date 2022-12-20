@@ -7,10 +7,12 @@
   :author "Izaak Walton <izaakw@protonmail.com>"
   :license "GNU General Purpose License"
   :description "IMSLP API library"
-  :depends-on ("dexador" "cl-json")
+  :depends-on ("dexador" "cl-json" "alexa")
   :serial t
   :components ((:file "package")
+               (:file "config")
                (:file "requests")
+               (:file "gathering")
                (:file "works")
                (:file "people")
                (:file "search")))

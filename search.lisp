@@ -4,56 +4,9 @@
 
 (in-package :hectares)
 
-;;; search methods for imslp (brainstorm for now)
-;;;
-;;; start off, look for a match for a full name (people) or full
+;;;Searching for works or people on IMSLP
 
-;(defvar *search-result* nil)
-
-;(defun search-people-json (full-name json-objects)
- ; "Searches a list of people json-objects for a given full-name string"
-  ;(flet ((make-work (thread-number)
-   ;        (lambda ()
-    ;         (loop :for i :from thread-number :to 999 :by *cores*
-     ;              :if (if (> (length (cdadr (nth i json-objects))) 9)
-      ;                     (equal (subseq (cdadr (nth i json-objects)) 9)
-       ;                           full-name)
-         ;                  nil)
-        ;             :do (setq *search-result* (shelve-person (nth i json-objects)))))))
-   ; (let ((threads nil))
-    ;  (dotimes (i *cores*)
-     ;   (let ((name (format nil "Searcher #~D" i)))
-      ;    (push (bt:make-thread (make-work i) :name name) threads)))
-     ; (dolist (thread threads)
-      ;  (bt:join-thread thread)))))
-       ;                  
-
-;;; if (subseq (cdadr json-object) 9) == name, good to go
-           
-;(declaim (ftype (function (string) imslp-person) search-people))
-;(defun search-people (full-name)
- ; "Searches all people on imslp for a given full-name string (until that person has been found)"
-  ;(setq *search-result* nil)
- ; (flet ((make-work (thread-number)
-  ;         (lambda ()
-   ;          (loop :for i :upfrom thread-number :by *cores*
-       ;            :if (list-ran-out-p (dex:get (people-url (* i 1000))))
-    ;                     :do (return)
-     ;              :else
-      ;               :do (search-people-json full-name
-        ;                                     (parse-json-objects
-         ;                                     (dex:get (people-url (* i 1000)))))))))
-;    (let ((threads nil))
- ;     (dotimes (i *cores*)
-  ;      (let ((name (format nil "IMSLP gatherer #~D" i)))
-   ;       (push (bt:make-thread (make-work i) :name name) threads)))
-    ;  (dolist (thread threads)
-     ;   (bt:join-thread thread))))
- ; *search-result*)
-
-;;; it works!
-
-(alexa:define-string-lexer name-lexer
+(alexa:define-string-lexer name-lexer ; this needs to account for plural instruments
   ()
   ("[A-zÀ-ú][A-zÀ-ú]*" (return $@))
   ("[0-9][0-9]*" (return $@))
@@ -71,7 +24,6 @@
         :while tok
         :collect tok))
 
-(lex-name "Bach, Johann Sebastian")
 
 (defun compare-lexed-names-inclusive (name1 name2)
   "Compares two lexed names for common words. Returns the number of common words."
@@ -109,10 +61,9 @@
            (lambda ()
              (loop :for i :from thread-number :to 999 :by *cores*
                    :if (and (> (length (cdadr (nth i json-objects))) 9)
-                            (> (compare-string-names (subseq (cdadr (nth i json-objects)) 9)
-                                                        name-string)
+                            (> (compare-string-names name-string (subseq (cdadr (nth i json-objects)) 9))
                                0))
-                               :do (setq *search-result* (cons (shelve-person (nth i json-objects))
+                     :do (setq *search-result* (cons (shelve-person (nth i json-objects))
                                                            *search-result*))))))
     (let ((threads nil))
       (dotimes (i *cores*)

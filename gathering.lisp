@@ -33,12 +33,7 @@
 (defvar *all-work-strings* nil)
 (defvar *all-works* nil)
 
-;;; optimize by using one process to parse the json objects, then another function to then shelve all of those works
-;;;there are just too many
-;;;the heap keeps overloading
-;;;should I move them to a file of matched pairs?
-
-(defun gather-work-strings ()
+(defun gather-works ()   ; ridiculously slow
   (setq *all-work-strings* nil)
   (flet ((make-work (thread-number)
            (lambda ()
@@ -46,7 +41,7 @@
                    :if (list-ran-out-p (dex:get (works-url (* i 1000))))
                      :do (return)
                    :else
-                     :do (push (dex:get (works-url (* i 1000))) *all-work-strings*)))))
+                     :do (push (mapcar #'shelve-work (parse-json-objects (dex:get (works-url (* i 1000))))) *all-works*)))))
     (let ((threads nil))
       (dotimes (i *cores*)
         (let ((name (format nil "IMSLP gatherer #~D" i)))

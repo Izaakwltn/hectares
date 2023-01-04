@@ -6,22 +6,22 @@
 
 ;;; defining class for imslp persons
 
-(defclass imslp-person () ; later break into first name and last name
-  ((name :accessor name
-         :initarg :name)
-   (link :accessor link
-         :initarg :link)))
+;(defclass imslp-person () ; later break into first name and last name
+ ; ((name :accessor name
+  ;       :initarg :name)
+   ;(link :accessor link
+    ;     :initarg :link)))
 
-(defmethod print-object ((obj imslp-person) stream)
+(defstruct person name link) ; struct should be much faster
+
+(defmethod print-object ((obj person) stream)
   (print-unreadable-object (obj stream :type t)
-    (with-accessors ((name name)
-                     (link link))
-        obj
-      (format stream "~a, ~a" name link))))
+    obj
+    (format stream "~a, ~a" (person-name obj) (person-link obj))))
 
-(defun make-imslp-person (name link)
-  (make-instance 'imslp-person :name name
-                               :link link))
+;(defun make-imslp-person (name link)
+ ; (make-instance 'imslp-person :name name
+  ;                             :link link))
 
 ;;; potentially useful later, but for now, unused
 (defun parse-first-last (name-string)
@@ -46,8 +46,8 @@
 ;                       (cdr (nth 5 json-object)))))
 
 (defun shelve-person (json-object)
-  (make-imslp-person (subseq (cdadr json-object) 9)
-                     (cdr (nth 5 json-object))))
+  (make-person :name (subseq (cdadr json-object) 9)
+               :link (cdr (nth 5 json-object))))
 
-(defun all-people ()
-  (mapcar #'shelve-person (all-people-json-objects)))
+;(defun all-people ()
+ ; (mapcar #'shelve-person (all-people-json-objects)))

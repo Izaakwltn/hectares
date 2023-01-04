@@ -2,27 +2,24 @@
 ## An IMSLP API library in Common Lisp
 
 The project has a few useful functions so far:
-```(gather-people)``` will return a list of all people on IMSLP, stored as ```imslp-person``` objects. 
+```(gather-people)``` will return a list of all people on IMSLP, stored as ```hectares::person``` objects. Works are stored as ```hectares::work``` objects.
 
 ```(search-people name-string)``` will search through all people for a completely matching name, for instance:
 
-```(search-people "Bach, Johann Sebastian")```
+!["Bach" Search Results](images/bach-search.png)
 
-```#<IMSLP-PERSON Bach, Johann Sebastian, https://imslp.org/wiki/Category:Bach,_Johann_Sebastian>```
+or
 
-```(search-works search-string) ``` will search through all works for complete matches:
+!["Johann Bach" Search Results](images/johann-bach-search.png)
 
-```HECTARES> (search-works "violin concerto d major")```
+```(search-works search-string) ``` will search through all works for complete matches (currently disregards plural instruments (violin vs violins):
 
-```(#<IMSLP-WORK Concerto No.1 for Violin and Viola in D major (Anzoletti, Marco) https://imslp.org/wiki/Concerto_No.1_for_Violin_and_Viola_in_D_major_(Anzoletti,_Marco)>```
-
-``` #<IMSLP-WORK Concerto for Violin and Piano in D major, K.Anh.56/315f (Mozart, Wolfgang Amadeus) https://imslp.org/wiki/Concerto_for_Violin_and_Piano_in_D_major,_K.Anh.56/315f_(Mozart,_Wolfgang_Amadeus)>```
-
-``` #<IMSLP-WORK Concerto for Violin and Cello in F major, D-Dl Mus.2994-O-1 (Anonymous) https://imslp.org/wiki/Concerto_for_Violin_and_Cello_in_F_major,_D-Dl_Mus.2994-O-1_(Anonymous)>```
-etc.
+![""Bach violin concerto" Search Results](images/bach-violin-concerto-search.png)
 
 
 I am using bordeaux-threads to add efficiency through multithreading- it is currently set to use 4 cores, go to config.lisp to change ```*cores*``` or likewise ```(setq *cores* number-of-cores)```
+
+```(gather-works)``` somewhat works but there are so many works that it runs at a snail-pace, it may be most useful to bail after an amount of time and reference ```*all-works*``` for what has been collected so far.
 
 ##### Sometimes it all starts with a joke:
 

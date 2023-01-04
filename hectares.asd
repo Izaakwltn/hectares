@@ -15,4 +15,5 @@
                (:file "gathering")
                (:file "works")
                (:file "people")
-               (:file "search")))
+               (:file "search")
+               (:file "metadata")))

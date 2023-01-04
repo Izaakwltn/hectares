@@ -9,11 +9,13 @@
   :description "IMSLP API library"
   :depends-on ("dexador" "cl-json" "alexa" "lquery")
   :serial t
-  :components ((:file "package")
-               (:file "config")
-               (:file "requests")
-               (:file "gathering")
-               (:file "works")
-               (:file "people")
-               (:file "search")
-               (:file "metadata")))
+  :components ((:module "src"
+                :serial t
+                :components ((:file "package")
+                             (:file "config")
+                             (:file "requests")
+                             (:file "gathering")
+                             (:file "works")
+                             (:file "people")
+                             (:file "search")
+                             (:file "metadata")))))

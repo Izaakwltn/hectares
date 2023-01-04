@@ -32,8 +32,8 @@ The method ```(metadata object)``` uses web-scraping to gather more information 
 ```(gather-works)``` somewhat works but there are so many works that it runs at a snail-pace, it may be most useful to bail after an amount of time and reference ```*all-works*``` for what has been collected so far.
 
 
-## Sometimes it all starts with a joke:
+## A musical joke:
 
-Q- *How much land is used to grow all the trees needed to make all the paper necessary to print all the copies of all the editions of the works of Berlioz?*
+Q- *How much land is used to grow all the trees needed to make all the paper necessary to print all the copies of all the editions of the complete works of Berlioz?*
 
 A- *A Hectare of Berlioz*

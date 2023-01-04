@@ -6,8 +6,6 @@
 
 ;;; Gathering metadata for a given work or person
 
-(ql:quickload :lquery)
-
 (defun collect-html (link)
   (dex:get link))
                  

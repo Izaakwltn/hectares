@@ -6,15 +6,15 @@ The project has a few useful functions so far:
 
 ```(search-people name-string)``` will search through all people for a completely matching name, for instance:
 
-!["Bach" Search Results](images/bach-search.png)
+!["Bach" Search Results](screenshots/bach-search.png "Bach Search Results")
 
 or
 
-!["Johann Bach" Search Results](images/johann-bach-search.png)
+!["Johann Bach" Search Results](screenshots/johann-bach-search.png "Johann Bach Search Results")
 
 ```(search-works search-string) ``` will search through all works for complete matches (currently disregards plural instruments (violin vs violins):
 
-![""Bach violin concerto" Search Results](images/bach-violin-concerto-search.png)
+![""Bach violin concerto" Search Results](screenshots/bach-violin-concerto-search.png "Bach Violin Concerto Search Results")
 
 
 I am using bordeaux-threads to add efficiency through multithreading- it is currently set to use 4 cores, go to config.lisp to change ```*cores*``` or likewise ```(setq *cores* number-of-cores)```

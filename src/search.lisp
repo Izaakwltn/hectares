@@ -93,6 +93,7 @@
       (dolist (thread threads)
         (bt:join-thread thread))))
   *search-result*)
+ ; (mapcar #'metadata *search-result*)) ; for later when I've stabilized 404 errors
 
 
 ;;; Searching for works
@@ -135,6 +136,3 @@
       (dolist (thread threads)
         (bt:join-thread thread))))
   *search-result*)
-
-;;; make separate search parameters for exclusivity, like violin concerto should only return violin concertos
-;;; actually change

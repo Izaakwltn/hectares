@@ -19,7 +19,7 @@
                     ; (wiki metaperson-wiki)
                      (link metaperson-link))
         obj
-      (format stream "~a | ~a | ~a" name dates link))))
+      (format stream "~%~%~a~%~a~%~a" name dates link))))
 
 (defun parse-dates (name-date-string)
   (if (string-equal (subseq name-date-string 0 1) "(")
@@ -50,32 +50,34 @@
 
 (defmethod metadata ((person person))
   (make-metaperson :name (person-name person)
-                   :dates (dates (person-link person))
+                   :dates (dates person)
                    :link (person-link person)
                    :other-data (other-data person)))
 
 ;;; Metadata for works
 
-(defstruct metawork title composer link date other-data)
+(defstruct metawork title composer link origin movements other-data)
 
 (defmethod print-object ((obj metawork) stream)
   (print-unreadable-object (obj stream :type t)
     (with-accessors ((title metawork-title)
                      (composer metawork-composer)
                      (link metawork-link)
-                     (date metawork-date)
+                     (origin metawork-origin)
+                     (movements metawork-movements)
                      (data metawork-other-data))
         obj
-      (format stream "~a ~a ~a ~a ~a" title composer link date data))))
+      (format stream "~%~a~%~a~%~a~%~%~a~%~a~%" title composer link origin movements))))
 
 (defmethod metadata ((work work))
+  (let ((parsed-content (lquery:$ (initialize (collect-html (work-link work))))))
+    (let ((data (lquery:$ parsed-content "div .wp_header td" (text))))
   (make-metawork :title (work-title work)
                  :composer (work-composer work)
                  :link (work-link work)
-                 :date nil ;; add date function for finding the date of a piece
-                 :other-data nil)) ;; make an other-data method for works
-
-
+                 :movements (aref data 0)
+                 :origin (aref data 1) ;; add date function for finding the date of a piece
+                 :other-data nil)))) ;; make an other-data method for works
   
 ;(defun works-list (person)
   

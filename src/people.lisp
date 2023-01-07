@@ -4,26 +4,18 @@
 
 (in-package #:hectares)
 
-;;; defining class for imslp persons
+;;; defining struct for people
 
-;(defclass imslp-person () ; later break into first name and last name
- ; ((name :accessor name
-  ;       :initarg :name)
-   ;(link :accessor link
-    ;     :initarg :link)))
-
-(defstruct person name link) ; struct should be much faster
+(defstruct person name link) ; struct is much faster than class
 
 (defmethod print-object ((obj person) stream)
   (print-unreadable-object (obj stream :type t)
     obj
     (format stream "~a, ~a" (person-name obj) (person-link obj))))
 
-;(defun make-imslp-person (name link)
- ; (make-instance 'imslp-person :name name
-  ;                             :link link))
 
 ;;; potentially useful later, but for now, unused
+
 (defun parse-first-last (name-string)
   "Parses a 'last, first' name string into a (first last) list"
   (loop :with name-pair := nil
@@ -38,16 +30,9 @@
                                                   (subseq name-string (1- i) i)))
         :finally (return (cons (subseq current-name 1) name-pair))))
 
-;;; this parsing approach is flawed for one named or band names- without a comma
-;(defun shelve-person (json-object)
-;  (let ((nom (parse-first-last (subseq (cdadr json-object) 9))))
-;    (make-imslp-person (first nom)
-;                       (second nom)
-;                       (cdr (nth 5 json-object)))))
+;;; ^^^ this parsing approach is flawed for one named or band names- without a comma
 
+                                        
 (defun shelve-person (json-object)
   (make-person :name (subseq (cdadr json-object) 9)
                :link (cdr (nth 5 json-object))))
-
-;(defun all-people ()
- ; (mapcar #'shelve-person (all-people-json-objects)))

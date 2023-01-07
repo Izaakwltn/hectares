@@ -5,15 +5,7 @@
 (in-package #:hectares)
 
 
-;;; defining class for imslp works
-
-;(defclass imslp-work ()
- ; ((title :accessor title
-  ;        :initarg :title)
-   ;(composer :accessor composer
-    ;         :initarg :composer)
-   ;(link     :accessor link
-    ;         :initarg :link)))
+;;; defining struct for works (using struct over class for speed)
 
 (defstruct work title composer link)
 
@@ -26,11 +18,6 @@
       (format stream
               "~a (~a) ~a" title composer link))))
 
-;(defun make-imslp-work (title composer link) ; you'd like that wouldn't you
- ; (make-instance 'imslp-work :title title
-  ;                           :composer composer
-   ;                          :link link))
-
 ;;; converting jsons to imslp-works
 
 (defun shelve-work (json-object)
@@ -39,7 +26,3 @@
     (make-work :title (cdr (third data))
                :composer (cdr (second data))
                :link (cdr (nth 5 json-object)))))
-
-;(defun all-works ()
- ; "Returns a list of all works on imslp as imslp-work objects"
-  ;(mapcar #'shelve-work (all-works-json-objects)))

@@ -1,4 +1,4 @@
-;;;; request-parsing.lisp
+;;;; requests.lisp
 ;;;;
 ;;;; Copyright Izaak Walton (c) 2022
 
@@ -54,7 +54,3 @@
   (remove-if #'(lambda (x)
                  (equal (first x) ':metadata))
              (cl-json:decode-json-from-string json-string)))
-
-;;;
-
-;;; (defparameter *cores* 4) -> now in config.lisp

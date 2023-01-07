@@ -33,7 +33,7 @@
 (defvar *all-work-strings* nil)
 (defvar *all-works* nil)
 
-(defun gather-works ()   ; ridiculously slow
+(defun gather-works ()   ; ridiculously slow, sry
   (setq *all-work-strings* nil)
   (flet ((make-work (thread-number)
            (lambda ()

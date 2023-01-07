@@ -9,8 +9,8 @@
 (defun collect-html (link)
   (dex:get link))
                  
-(defstruct metaperson name dates link) 
-;;; later add wikipedia link, number of compositions, other stuff? idk
+(defstruct metaperson name dates link other-data) 
+;;; later add wikipedia link, number of compositions, other stuff
 
 (defmethod print-object ((obj metaperson) stream)
   (print-unreadable-object (obj stream :type t)
@@ -26,9 +26,17 @@
       name-date-string
       (parse-dates (subseq name-date-string 1))))
              
-(defun dates (person-link)
-  (let ((parsed-content (lquery:$ (initialize (collect-html person-link)))))
+(defmethod dates ((person person))
+  (let ((parsed-content (lquery:$ (initialize (collect-html (person-link person))))))
     (parse-dates (vector-pop (lquery:$ parsed-content "div .cp_firsth" (text))))))
+
+(defgeneric other-data (object)
+  (:documentation "Returns assorted other data from the object page"))
+
+(defmethod other-data ((person person)) ;Later parse out specifics
+  (let ((parsed-content (lquery:$ (initialize (collect-html (person-link person))))))
+    (lquery:$ parsed-content "span" (text))))
+
 
 ;;; I need to find a way to handle pages that have been deleted, like:
 ;;; https://imslp.org/wiki/Category:Johann,_Bach
@@ -37,8 +45,37 @@
  ; (let ((parsed-content (lquery:$ (initialize (collect-html link)))))
   ;  (lquery:$ parsed-content "div .mw-warning-with-logexcerpt")))
 
+(defgeneric metadata (object)
+  (:documentation "Returns a meta(data) version of the object"))
+
 (defmethod metadata ((person person))
   (make-metaperson :name (person-name person)
-                :dates (dates (person-link person))
-                :link (person-link person)))
+                   :dates (dates (person-link person))
+                   :link (person-link person)
+                   :other-data (other-data person)))
 
+;;; Metadata for works
+
+(defstruct metawork title composer link date other-data)
+
+(defmethod print-object ((obj metawork) stream)
+  (print-unreadable-object (obj stream :type t)
+    (with-accessors ((title metawork-title)
+                     (composer metawork-composer)
+                     (link metawork-link)
+                     (date metawork-date)
+                     (data metawork-other-data))
+        obj
+      (format stream "~a ~a ~a ~a ~a" title composer link date data))))
+
+(defmethod metadata ((work work))
+  (make-metawork :title (work-title work)
+                 :composer (work-composer work)
+                 :link (work-link work)
+                 :date nil ;; add date function for finding the date of a piece
+                 :other-data nil)) ;; make an other-data method for works
+
+
+  
+;(defun works-list (person)
+  

@@ -54,9 +54,13 @@
                    :link (person-link person)
                    :other-data (other-data person)))
 
+;;;
 ;;; Metadata for works
+;;;
 
-(defstruct metawork title composer link origin movements other-data)
+(defstruct metawork title composer link origin first-publication movements instrumentation other-data)
+
+                                        ; eventually add first publication, instrumentation
 
 (defmethod print-object ((obj metawork) stream)
   (print-unreadable-object (obj stream :type t)
@@ -64,20 +68,39 @@
                      (composer metawork-composer)
                      (link metawork-link)
                      (origin metawork-origin)
+                     (first-publication metawork-first-publication)
                      (movements metawork-movements)
+                     (instrumentation metawork-instrumentation)
                      (data metawork-other-data))
         obj
-      (format stream "~%~a~%~a~%~a~%~%~a~%~a~%" title composer link origin movements))))
+      (format stream "~%~a~%~a~%~a~%~%Year/Location: ~a~%First Publication: ~a~%~a~%Instrumentation: ~a" title composer link origin first-publication movements instrumentation))))
+
+;;; Gather work data from the General information section at the bottom of the page
+;;; collect into key-pairs that can be searched using #'match-meta
+
+(defgeneric data-list (object)
+  (:documentation "Collects data on an imslp object in matched pairs"))
+
+(defmethod data-list ((work work))
+  (let ((parsed-content (lquery:$ (initialize (collect-html (work-link work))))))
+    (loop :with a := (lquery:$ parsed-content "div .wi_body th" (text))
+          :with b := (lquery:$ parsed-content "div .wi_body td" (text))
+          :for i :from 0 :to (- (length a) 1)
+          :collect (list (aref a i) (aref b i)))))
+
+(defun match-meta (first-three pair-list)
+  (second (find-if #'(lambda (x)
+                       (string-equal (subseq (first x) 0 3)
+                                     first-three))
+                   pair-list)))
 
 (defmethod metadata ((work work))
-  (let ((parsed-content (lquery:$ (initialize (collect-html (work-link work))))))
-    (let ((data (lquery:$ parsed-content "div .wp_header td" (text))))
-  (make-metawork :title (work-title work)
-                 :composer (work-composer work)
-                 :link (work-link work)
-                 :movements (aref data 0)
-                 :origin (aref data 1) ;; add date function for finding the date of a piece
-                 :other-data nil)))) ;; make an other-data method for works
-  
-;(defun works-list (person)
-  
+  (let ((data (data-list work)))
+    (make-metawork :title (work-title work)
+                   :composer (work-composer work)
+                   :link (work-link work)
+                   :instrumentation (match-meta "Ins" data)
+                   :movements (match-meta "Mov" data)
+                   :origin (match-meta "Yea" data)
+                   :first-publication (match-meta "Fir" data)
+                   :other-data nil)))
